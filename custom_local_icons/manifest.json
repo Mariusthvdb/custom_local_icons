@@ -1,0 +1,11 @@
+{
+  "domain": "custom_local_icons",
+  "name": "Custom local icons",
+  "documentation": "https://github.com/Mariusthvdb/custom-icons",
+  "dependencies": ["frontend", "http"],
+  "codeowners": [],
+  "requirements": [],
+  "config_flow": true,
+  "version": "0.2.1",
+  "iot_class": "local_polling"
+}

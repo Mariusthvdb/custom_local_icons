@@ -1,0 +1,9 @@
+{
+  "title": "Custom local icons",
+  "config": {
+    "abort": {
+      "single_instance_allowed": "Only a single configuration of Custom local icons is allowed."
+    },
+    "step": {}
+  }
+}
