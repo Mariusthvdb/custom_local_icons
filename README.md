@@ -56,11 +56,6 @@ Icons are referenced using the following naming convention:
 
 ## Usage
 
-### In Templates
-```jinja2
-{% set custom_icon = states.sensor.my_sensor.attributes.custom_icon %}
-```
-
 ### In YAML
 ```yaml
 button:
