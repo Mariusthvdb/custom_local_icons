@@ -58,9 +58,13 @@ Icons are referenced using the following naming convention:
 
 ### In YAML
 ```yaml
-button:
-  - entity: light.my_light
-    icon: cli:custom_icon_name
+lovelace:
+  dashboards:
+    ui-cctv:
+      mode: yaml
+      filename: ui-cctv.yaml
+      title: Cameras
+      icon: cli:home-video
 ```
 
 ### Icon Format
