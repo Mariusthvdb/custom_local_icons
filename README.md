@@ -24,6 +24,7 @@ A Home Assistant custom component for loading and displaying custom SVG icons fr
 ### Via HACS (Recommended)
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Mariusthvdb&repository=custom_local_icons)
+
 or:
 1. Open HACS in your Home Assistant instance
 2. Click on "Custom repositories"
@@ -42,6 +43,9 @@ or:
 ## Configuration
 
 ### Setup
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=custom_local_icons)
+
+or:
 1. Go to **Settings → Devices & Services**
 2. Click **Add Integration** (or search for "Custom Local Icons")
 3. Select "Custom Local Icons"
