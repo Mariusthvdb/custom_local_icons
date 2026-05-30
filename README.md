@@ -1,3 +1,4 @@
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/)
 [![GH-release](https://img.shields.io/github/v/release/Mariusthvdb/custom_local_icons.svg?style=flat-square)](https://github.com/Mariusthvdb/custom_local_icons/releases)
 [![GH-downloads](https://img.shields.io/github/downloads/Mariusthvdb/custom_local_icons/total?style=flat-square)](https://github.com/Mariusthvdb/custom_local_icons/releases)
 [![GH-last-commit](https://img.shields.io/github/last-commit/Mariusthvdb/custom_local_icons.svg?style=flat-square)](https://github.com/Mariusthvdb/custom_local_icons/commits/master)
