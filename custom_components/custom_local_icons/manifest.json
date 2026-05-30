@@ -1,12 +1,13 @@
 {
   "domain": "custom_local_icons",
   "name": "Custom local icons",
-  "documentation": "https://github.com/Mariusthvdb/custom_local_icons",
-  "issue_tracker": "https://github.com/Mariusthvdb/custom_local_icons/issues",
-  "dependencies": ["frontend", "http"],
   "codeowners": ["@Mariusthvdb"],
-  "requirements": [],
   "config_flow": true,
+  "dependencies": ["frontend", "http"],
+  "documentation": "https://github.com/Mariusthvdb/custom_local_icons",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/Mariusthvdb/custom_local_icons/issues",
+  "requirements": [],
   "version": "1.0.0",
-  "iot_class": "local_polling"
+  
 }
