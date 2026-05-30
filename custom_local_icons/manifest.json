@@ -1,9 +1,10 @@
 {
   "domain": "custom_local_icons",
   "name": "Custom local icons",
-  "documentation": "https://github.com/Mariusthvdb/custom-icons",
+  "documentation": "https://github.com/Mariusthvdb/custom_local_icons",
+  "issue_tracker": "https://github.com/Mariusthvdb/custom_local_icons/issues",
   "dependencies": ["frontend", "http"],
-  "codeowners": [],
+  "codeowners": ["@Mariusthvdb"],
   "requirements": [],
   "config_flow": true,
   "version": "0.2.1",
