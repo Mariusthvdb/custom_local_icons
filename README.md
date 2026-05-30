@@ -3,6 +3,8 @@
 [![GH-last-commit](https://img.shields.io/github/last-commit/Mariusthvdb/custom_local_icons.svg?style=flat-square)](https://github.com/Mariusthvdb/custom_local_icons/commits/master)
 [![GH-code-size](https://img.shields.io/github/languages/code-size/Mariusthvdb/custom_local_icons.svg?color=red&style=flat-square)](https://github.com/Mariusthvdb/custom_local_icons)
 
+![icon](https://github.com/user-attachments/assets/45507839-3aef-4682-9957-f27501ba883e)
+
 # Custom Local Icons
 
 A Home Assistant custom component for loading and displaying custom SVG icons from your local filesystem. Perfect for adding organization-specific, branded, or personalized icons to your Home Assistant UI.
