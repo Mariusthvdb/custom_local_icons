@@ -32,7 +32,7 @@ A Home Assistant custom component for loading and displaying custom SVG icons fr
 
 ### Setup
 1. Go to **Settings → Devices & Services**
-2. Click **Create Automation** (or search for "Custom Local Icons")
+2. Click **Add Integration** (or search for "Custom Local Icons")
 3. Select "Custom Local Icons"
 4. Enter your icon folder path (default: `www/custom_local_icons`)
 5. Click **Create Entry**
