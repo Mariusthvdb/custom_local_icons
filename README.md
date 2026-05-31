@@ -69,7 +69,20 @@ Icons are referenced using the following naming convention:
 - `icon1` for `/config/www/custom_local_icons/icon1.svg`
 - `subfolder/icon3` for `/config/www/custom_local_icons/subfolder/icon3.svg`
 
+
+### Icon Format
+Use the prefix `cli:` followed by your icon name:
+```
+cli:icon_name
+cli:subfolder/icon_name
+```
+
 ## Usage
+
+### In UI
+
+<img width="598" height="555" alt="icon-picker" src="https://github.com/user-attachments/assets/7ced88e1-ccc0-4c4a-97db-35dd0bb055ad" />
+
 
 ### In YAML
 ```yaml
@@ -82,12 +95,6 @@ lovelace:
       icon: cli:home-video
 ```
 
-### Icon Format
-Use the prefix `cli:` followed by your icon name:
-```
-cli:icon_name
-cli:subfolder/icon_name
-```
 
 ## SVG Requirements
 
