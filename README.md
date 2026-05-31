@@ -94,7 +94,7 @@ lovelace:
       title: Cameras
       icon: cli:home-video
 ```
-on a custom:button-card
+on the most versatile card of all, [custom:button-card](https://github.com/custom-cards/button-card)
 ```
 - type: custom:button-card
   icon: >
@@ -104,7 +104,7 @@ on a custom:button-card
 in a stock entities card:
 ```
 - type: entities
-  title: Custom icons
+  title: Custom local icons
   entities:
     - entity: switch.tester
       name: Switch Light
