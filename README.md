@@ -94,8 +94,35 @@ lovelace:
       title: Cameras
       icon: cli:home-video
 ```
+on a custom:button-card
+```
+- type: custom:button-card
+  icon: >
+    [[[ return states['binary_sensor.rook_co_lekkage'].state === 'off'
+        ? 'cli:home-check' : 'mdi:home-alert'; ]]]
+```
+in a stock entities card:
+```
+- type: entities
+  title: Custom icons
+  entities:
+    - entity: switch.tester
+      name: Switch Light
+      icon: cli:light-switch
+```
+or eg in a glance card with [UIX](https://uix.lf.technology/using/entities/) templates
 
-
+```
+- type: glance
+  entities:
+    - entity: device_tracker.philips_hue_1
+      style: |
+        :host {
+          --uix-icon:
+            {% set con = states(config.entity) %}
+            cli:hue-bridge-v2{{'-off' if con == 'not_home'}};
+        }
+```
 ## SVG Requirements
 
 Your SVG files should follow these guidelines:
