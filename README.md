@@ -12,12 +12,12 @@ A Home Assistant custom component for loading and displaying custom SVG icons fr
 
 ## Features
 
-- 🎨 **Custom SVG Icons** - Load any SVG icons from your local filesystem
-- 🔒 **Security First** - Strict SVG validation prevents script injection and malicious content
-- ⚡ **Caching** - Icons are cached in memory for optimal performance
-- 🎯 **Easy Setup** - Simple config flow with folder path configuration
-- 🌐 **Frontend Integration** - Seamlessly integrated with Home Assistant's icon system
-- 📱 **Responsive** - Works across all Home Assistant interfaces
+🎨 Custom SVG Icons - Load any SVG icons from your local filesystem
+🔒 Security First - Strict SVG validation prevents script injection and malicious content
+⚡ Caching - Icons are cached in memory and pre-warmed for fast synchronous rendering
+🎯 Easy Setup - Simple config flow with folder path configuration
+🌐 Frontend Integration - Integrates with Home Assistant’s icon system using a synchronous fallback-compatible CLI icon provider
+📱 Responsive - Works across all Home Assistant interfaces
 
 ## Installation
 
@@ -179,10 +179,15 @@ All validation happens on both the backend (Python) and frontend (JavaScript).
 
 ## Performance
 
-- **Caching** - Icons are cached in the browser to minimize file transfers
-- **Lazy Loading** - Icons are only loaded when needed
-- **Optimized Parsing** - Efficient SVG processing to extract only necessary data
+- **Caching**
+  Icons are cached in-memory after first successful parse to avoid repeated SVG processing and network requests. Browser HTTP caching further reduces redundant file transfers.
 
+- **Loading Strategy**
+  Icons are resolved synchronously from cache when available.
+  If not cached, a background fetch is triggered and the icon is temporarily rendered using a safe fallback placeholder. Icons are also pre-warmed after initial icon list retrieval to improve first-render performance.
+
+- **Optimized Parsing**
+  SVG icons are strictly parsed and sanitized. Only safe path data is extracted, and scripts or event handlers are removed to ensure secure and minimal icon representations.
 ## Limitations
 
 - SVG icons only (PNG, JPG, and other formats not supported)

@@ -1,95 +1,65 @@
 const DOMAIN = "custom_local_icons";
 
 const ICON_STORE = {};
+const ICON_PROMISES = {};
 
 const VALID_ICON_NAME = /^[a-zA-Z0-9_/-]+$/;
 
+/**
+ * Parse + sanitize SVG into CLI icon format
+ * Async ONLY used for background warming
+ */
 const preProcessIcon = async (iconName) => {
   const [icon, format] = iconName.split("#");
 
-  // Prevent path traversal or malformed names
-  if (
-    !icon ||
-    icon.includes("..") ||
-    !VALID_ICON_NAME.test(icon)
-  ) {
+  if (!icon || icon.includes("..") || !VALID_ICON_NAME.test(icon)) {
     console.warn(`[${DOMAIN}] Invalid icon name: ${icon}`);
-    return {};
+    return null;
   }
 
-  const response = await fetch(
-    `/${DOMAIN}/icons/${icon}.svg`
-  );
-
+  const response = await fetch(`/${DOMAIN}/icons/${icon}.svg`);
   if (!response.ok) {
-    console.warn(
-      `[${DOMAIN}] Failed to load icon: ${icon}`
-    );
-    return {};
+    console.warn(`[${DOMAIN}] Failed to load icon: ${icon}`);
+    return null;
   }
 
   const text = await response.text();
 
-  // Parse strictly as SVG XML
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(
-    text,
-    "image/svg+xml"
-  );
-
+  const doc = new DOMParser().parseFromString(text, "image/svg+xml");
   const svg = doc.querySelector("svg");
 
   if (!svg) {
-    console.warn(
-      `[${DOMAIN}] Invalid SVG icon: ${icon}`
-    );
-    return {};
+    console.warn(`[${DOMAIN}] Invalid SVG icon: ${icon}`);
+    return null;
   }
 
-  // Reject embedded scripts
   if (svg.querySelector("script")) {
-    console.warn(
-      `[${DOMAIN}] Blocked scripted SVG: ${icon}`
-    );
-    return {};
+    console.warn(`[${DOMAIN}] Blocked scripted SVG: ${icon}`);
+    return null;
   }
 
-  // Reject inline event handlers (onclick, onload, etc.)
-  const hasEventHandlers = Array.from(
-    svg.querySelectorAll("*")
-  ).some((el) =>
+  const hasEventHandlers = Array.from(svg.querySelectorAll("*")).some((el) =>
     Array.from(el.attributes).some((attr) =>
       attr.name.toLowerCase().startsWith("on")
     )
   );
 
   if (hasEventHandlers) {
-    console.warn(
-      `[${DOMAIN}] Blocked unsafe SVG: ${icon}`
-    );
-    return {};
+    console.warn(`[${DOMAIN}] Blocked unsafe SVG: ${icon}`);
+    return null;
   }
 
-  const viewBox =
-    svg.getAttribute("viewBox") || "0 0 24 24";
+  const viewBox = svg.getAttribute("viewBox") || "0 0 24 24";
 
   let path = "";
-
-  // Only extract safe <path d="">
-  for (const pth of svg.querySelectorAll("path")) {
-    const d = pth.getAttribute("d");
-
-    if (d) {
-      path += d;
-    }
+  for (const p of svg.querySelectorAll("path")) {
+    const d = p.getAttribute("d");
+    if (d) path += d;
   }
 
-  // Require actual path data
   if (!path) {
-    console.warn(
-      `[${DOMAIN}] SVG contains no usable paths: ${icon}`
-    );
-    return {};
+    console.warn(`[${DOMAIN}] SVG contains no usable paths: ${icon}`);
+    return null;
   }
 
   return {
@@ -99,40 +69,69 @@ const preProcessIcon = async (iconName) => {
   };
 };
 
-const getIcon = async (iconName) => {
+/**
+ * CRITICAL: synchronous icon resolver (MDI-like behavior)
+ * Never returns a Promise.
+ */
+const getIcon = (iconName) => {
+  // 1. already ready → instant
   if (ICON_STORE[iconName]) {
     return ICON_STORE[iconName];
   }
 
-  ICON_STORE[iconName] =
-    preProcessIcon(iconName);
+  // 2. start background load (once only)
+  if (!ICON_PROMISES[iconName]) {
+    ICON_PROMISES[iconName] = preProcessIcon(iconName).then((icon) => {
+      if (icon) {
+        ICON_STORE[iconName] = icon;
+      }
+      return icon;
+    });
+  }
 
-  return ICON_STORE[iconName];
+  // 3. ALWAYS return safe placeholder synchronously
+  return {
+    viewBox: "0 0 24 24",
+    path: "",
+    format: "mdi",
+  };
 };
 
+/**
+ * Icon list (used by picker)
+ */
 const getIconList = async () => {
-  const response = await fetch(
-    `/${DOMAIN}/list`
-  );
+  const response = await fetch(`/${DOMAIN}/list`);
 
   if (!response.ok) {
-    console.warn(
-      `[${DOMAIN}] Failed to fetch icon list`
-    );
+    console.warn(`[${DOMAIN}] Failed to fetch icon list`);
     return [];
   }
 
   return response.json();
 };
 
+/**
+ * Warm cache at startup (removes Safari/UIX race entirely)
+ */
+getIconList().then((list) => {
+  list.forEach(({ name }) => {
+    getIcon(name);
+  });
+});
+
+/**
+ * Expose API globally
+ */
 window.getIcon = getIcon;
 window.getIconList = getIconList;
 
-if (!("customIcons" in window)) {
-  window.customIcons = {};
-}
+/**
+ * Register CLI icon set synchronously (CRITICAL)
+ */
+window.customIcons ??= {};
 
-window.customIcons["cli"] = {
+window.customIcons.cli = {
   getIcon,
   getIconList,
 };
