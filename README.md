@@ -22,8 +22,6 @@ A Home Assistant custom component for loading and displaying custom SVG icons fr
 
 🌐 Frontend Integration - Integrates with Home Assistant’s icon system using a synchronous fallback-compatible CLI icon provider
 
-📱 Responsive - Works across all Home Assistant interfaces
-
 ## Installation
 
 ### Via HACS (Recommended)
