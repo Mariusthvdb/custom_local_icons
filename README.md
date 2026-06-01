@@ -13,10 +13,15 @@ A Home Assistant custom component for loading and displaying custom SVG icons fr
 ## Features
 
 🎨 Custom SVG Icons - Load any SVG icons from your local filesystem
+
 🔒 Security First - Strict SVG validation prevents script injection and malicious content
+
 ⚡ Caching - Icons are cached in memory and pre-warmed for fast synchronous rendering
+
 🎯 Easy Setup - Simple config flow with folder path configuration
+
 🌐 Frontend Integration - Integrates with Home Assistant’s icon system using a synchronous fallback-compatible CLI icon provider
+
 📱 Responsive - Works across all Home Assistant interfaces
 
 ## Installation
