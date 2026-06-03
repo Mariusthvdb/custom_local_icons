@@ -127,12 +127,12 @@ or eg in a glance card with [UIX](https://uix.lf.technology/using/entities/) tem
 ```
 
 ## 🔄 Updating Icons
-When icons are added, removed, or modified in the filesystem, the changes are not automatically reflected in an active Home Assistant session.
+When icons are added, removed, or modified in the filesystem, the changes are **not** automatically reflected in an active Home Assistant session.
 To apply updates, use one of the following methods:
 
 ### Recommended (full refresh)
 Reload the Home Assistant browser tab (hard refresh)
-This ensures the icon list and frontend cache are fully re-initialized
+This ensures the icon list and frontend cache are fully re-initialized.
 
 ### Alternative (UIX)
 If your setup includes [UIX](https://uix.lf.technology/debugging/cache/?h=clear) support, you can trigger a frontend cache reset:
