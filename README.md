@@ -1,3 +1,5 @@
+# Custom Local Icons
+
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/)
 [![GH-release](https://img.shields.io/github/v/release/Mariusthvdb/custom_local_icons.svg?style=flat-square)](https://github.com/Mariusthvdb/custom_local_icons/releases)
 [![GH-downloads](https://img.shields.io/github/downloads/Mariusthvdb/custom_local_icons/total?style=flat-square)](https://github.com/Mariusthvdb/custom_local_icons/releases)
@@ -6,25 +8,26 @@
 
 ![icon](https://github.com/user-attachments/assets/45507839-3aef-4682-9957-f27501ba883e)
 
-# Custom Local Icons
-
 A Home Assistant custom component for loading and displaying custom SVG icons from your local filesystem. Perfect for adding organization-specific, branded, or personalized icons to your Home Assistant UI.
 
-## Features
 
-🎨 Custom SVG Icons - Load any SVG icons from your local filesystem
+## ⚡ Features
 
-🔒 Security First - Strict SVG validation prevents script injection and malicious content
+* 📂 Load SVG icons from a local folder
+* ⚡ Fast frontend rendering with in-memory caching
+* 🔍 Icon picker integration for UI selection
+* 🚀 Lazy loading with optional preloading
+* 🧩 Safe SVG parsing in the browser
+* 🔄 Live filesystem-based icon discovery
 
-⚡ Caching - Icons are cached in memory and pre-warmed for fast synchronous rendering
+## ✨ Summary
 
-🎯 Easy Setup - Simple config flow with folder path configuration
+Custom Local Icons provides a lightweight way to extend Home Assistant’s icon system using local SVG assets, with safe browser-based rendering and efficient frontend caching.
 
-🌐 Frontend Integration - Integrates with Home Assistant’s icon system using a synchronous fallback-compatible CLI icon provider
 
-## Installation
+## 📦 Installation
 
-### Via HACS (Recommended)
+### HACS (Recommended)
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Mariusthvdb&repository=custom_local_icons)
 
@@ -43,7 +46,8 @@ or:
    ```
 3. Restart Home Assistant
 
-## Configuration
+
+## ⚙️ Configuration
 
 ### Setup
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=custom_local_icons)
@@ -55,7 +59,7 @@ or:
 4. Enter your icon folder path (default: `www/custom_local_icons`)
 5. Click **Create Entry**
 
-### Icon Folder Structure
+## 📁 Icon Folder Structure
 
 Create your icon folder in your Home Assistant config directory:
 
@@ -68,11 +72,6 @@ Create your icon folder in your Home Assistant config directory:
 │   └── icon4.svg
 ```
 
-Icons are referenced using the following naming convention:
-- `icon1` for `/config/www/custom_local_icons/icon1.svg`
-- `subfolder/icon3` for `/config/www/custom_local_icons/subfolder/icon3.svg`
-
-
 ### Icon Format
 Use the prefix `cli:` followed by your icon name:
 ```
@@ -80,7 +79,7 @@ cli:icon_name
 cli:subfolder/icon_name
 ```
 
-## Usage
+## 🧭 Usage
 
 ### In UI
 
@@ -126,6 +125,43 @@ or eg in a glance card with [UIX](https://uix.lf.technology/using/entities/) tem
             cli:hue-bridge-v2{{'-off' if con == 'not_home'}};
         }
 ```
+
+## 🔄 Updating Icons
+When icons are added, removed, or modified in the filesystem, the changes are not automatically reflected in an active Home Assistant session.
+To apply updates, use one of the following methods:
+
+### Recommended (full refresh)
+Reload the Home Assistant browser tab (hard refresh)
+This ensures the icon list and frontend cache are fully re-initialized
+
+### Alternative (UIX)
+If your setup includes [UIX](https://uix.lf.technology/debugging/cache/?h=clear) support, you can trigger a frontend cache reset:
+```yaml
+action: fire-dom-event
+uix:
+  action: clear_cache
+```
+
+> This may update frontend assets without requiring a full browser reload, depending on the active UI state.
+
+⚠️ Notes
+The backend always reflects the latest filesystem state when /list is requested.
+The frontend caches icons for performance and does not continuously poll for changes.
+Icon updates are therefore only visible after a frontend refresh or cache clear action.
+
+
+## ⚡ Performance
+
+* **Frontend caching**
+  Icons are cached in memory after first load for instant reuse.
+  
+* **Loading strategy**
+  Icons load asynchronously and are rendered with a safe fallback until available. Frequently used icons are preloaded after initial list retrieval.
+
+- **SVG processing**
+  SVGs are parsed in the browser. Only valid path data is used. Unsafe content (scripts, event handlers) is rejected.
+
+
 ## SVG Requirements
 
 Your SVG files should follow these guidelines:
@@ -148,19 +184,25 @@ Your SVG files should follow these guidelines:
 </svg>
 ```
 
-## Security
+## 🛡 Security
 
-This component includes multiple layers of security:
+SVG content is validated before rendering:
 
-- **Path Traversal Prevention** - Icon names are validated to prevent directory traversal
-- **Script Blocking** - Embedded JavaScript is detected and blocked
-- **Event Handler Blocking** - Inline event handlers are removed
-- **Strict XML Parsing** - SVGs are parsed as strict XML to prevent injection
-- **Safe Path Extraction** - Only `<path>` element data is used
+* Blocks `<script>` elements
+* Blocks inline event handlers (`on*`)
+* Requires valid SVG structure
+* Extracts only path data for rendering
 
-All validation happens on both the backend (Python) and frontend (JavaScript).
 
-## Troubleshooting
+## ⚠️ Limitations
+
+* No real-time updates (reload required)
+* SVG format only
+* Large icon sets may increase initial load time
+* Icons must be stored in the configured folder
+
+
+## 🧰 Troubleshooting
 
 ### Icons Not Appearing
 1. **Check the folder path** - Verify the path in the config entry matches your icon folder
@@ -180,36 +222,20 @@ All validation happens on both the backend (Python) and frontend (JavaScript).
 - Your SVG contains embedded JavaScript or event handlers
 - Remove these elements from your SVG file
 
-## Performance
 
-- **Caching**
-  Icons are cached in-memory after first successful parse to avoid repeated SVG processing and network requests. Browser HTTP caching further reduces redundant file transfers.
-
-- **Loading Strategy**
-  Icons are resolved synchronously from cache when available.
-  If not cached, a background fetch is triggered and the icon is temporarily rendered using a safe fallback placeholder. Icons are also pre-warmed after initial icon list retrieval to improve first-render performance.
-
-- **Optimized Parsing**
-  SVG icons are strictly parsed and sanitized. Only safe path data is extracted, and scripts or event handlers are removed to ensure secure and minimal icon representations.
-## Limitations
-
-- SVG icons only (PNG, JPG, and other formats not supported)
-- Icons must be located in the specified folder
-- File size recommendations: Keep SVG files under 10KB for optimal performance
-
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit issues or pull requests.
 
-## License
+## 📄 License
 
 See the LICENSE file for details.
 
-## Support
+## 📊 Support
 
 For issues, questions, or feature requests, please open an issue on [GitHub](https://github.com/Mariusthvdb/custom_local_icons/issues).
 
-## Changelog
+## 📜 Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for release history and version information.
 
