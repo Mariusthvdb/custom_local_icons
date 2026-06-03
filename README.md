@@ -22,7 +22,7 @@ A Home Assistant custom component for loading and displaying custom SVG icons fr
 
 ## ✨ Summary
 
-Custom Local Icons provides a lightweight way to extend Home Assistant’s icon system using local SVG assets, with safe browser-based rendering and efficient frontend caching.
+Custom Local Icons provides a lightweight way to extend Home Assistant’s icon system using local SVG icons, with safe browser-based rendering and efficient frontend caching.
 
 
 ## 📦 Installation
