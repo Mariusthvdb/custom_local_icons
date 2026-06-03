@@ -131,7 +131,7 @@ When icons are added, removed, or modified in the filesystem, the changes are **
 To apply updates, use one of the following methods:
 
 ### Recommended (full refresh)
-Reload the Home Assistant browser tab (hard refresh)
+Reload the Home Assistant browser tab (hard refresh).
 This ensures the icon list and frontend cache are fully re-initialized.
 
 ### Alternative (UIX)
