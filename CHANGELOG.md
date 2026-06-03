@@ -1,5 +1,32 @@
 # Changelog
 
+# [1.2.0] - 2026-06-03
+
+## Added
+
+* Frontend icon preloading to improve icon picker responsiveness.
+* Frontend and backend informational logging for icon discovery and troubleshooting.
+* Documentation for refreshing icon lists after filesystem changes.
+* UIX cache-clear workflow documentation as an alternative to a full browser reload.
+
+## Changed
+
+* Reworked frontend icon loading and caching behavior for improved reliability.
+* Icon lists are now always generated from the current filesystem state.
+* Updated README with expanded installation, usage, performance, security, and troubleshooting documentation.
+* Improved icon picker synchronization after frontend cache refreshes.
+
+## Security
+
+* Continued validation of SVG content before rendering.
+* Maintained protection against unsupported SVG scripts and inline event handlers.
+
+## Notes
+
+* Icon additions, removals, and modifications require a browser reload or frontend cache clear before becoming visible in the UI.
+* Icons with unsupported names may appear in the icon list but will not render; browser console warnings identify affected files.
+
+
 ## [1.0.0] - 2026-05-29
 
 ### Initial Release
