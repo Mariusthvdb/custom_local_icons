@@ -166,12 +166,12 @@ Icon updates are therefore only visible after a frontend refresh or cache clear 
 
 Your SVG files should follow these guidelines:
 
-1. **Valid SVG Format** - Must be valid XML
-2. **Viewbox Attribute** - Should include a `viewBox` attribute (defaults to `0 0 24 24`)
-3. **Path Elements** - Use `<path>` elements for icon shapes
-4. **No Scripts** - Embedded `<script>` tags are blocked for security
-5. **No Event Handlers** - Event handlers (`onclick`, `onload`, etc.) are blocked
-6. **Safe Content** - Only path data is extracted and rendered
+* **Valid SVG Format** - Must be valid XML
+* **Viewbox Attribute** - Should include a `viewBox` attribute (defaults to `0 0 24 24`)
+* **Path Elements** - Use `<path>` elements for icon shapes
+* **No Scripts** - Embedded `<script>` tags are blocked for security
+* **No Event Handlers** - Event handlers (`onclick`, `onload`, etc.) are blocked
+* **Safe Content** - Only path data is extracted and rendered
 
 ### Example SVG
 
@@ -205,10 +205,10 @@ SVG content is validated before rendering:
 ## 🧰 Troubleshooting
 
 ### Icons Not Appearing
-1. **Check the folder path** - Verify the path in the config entry matches your icon folder
-2. **Check file names** - Use lowercase names without spaces
-3. **Verify SVG format** - Ensure SVG files are valid XML
-4. **Check Home Assistant logs** - Look for error messages in Settings → System → Logs
+* **Check the folder path** - Verify the path in the config entry matches your icon folder
+* **Check file names** - Use lowercase names without spaces
+* **Verify SVG format** - Ensure SVG files are valid XML
+* **Check Home Assistant logs** - Look for error messages in Settings → System → Logs
 
 ### Error: "Invalid icon name"
 - Icon names can only contain alphanumeric characters, underscores, hyphens, and forward slashes
