@@ -142,7 +142,7 @@ uix:
   action: clear_cache
 ```
 
-> This may update frontend assets without requiring a full browser reload, depending on the active UI state.
+> This clears the frontend cache, causing the icon list to be requested again without requiring a full browser reload.
 
 ⚠️ Notes
 The backend always reflects the latest filesystem state when /list is requested.
