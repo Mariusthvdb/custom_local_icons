@@ -130,9 +130,11 @@ or eg in a glance card with [UIX](https://uix.lf.technology/using/entities/) tem
 When icons are added, removed, or modified in the filesystem, the changes are **not** automatically reflected in an active Home Assistant session.
 To apply updates, use one of the following methods:
 
-### Recommended (full refresh)
-Reload the Home Assistant browser tab (hard refresh).
+### Recommended
+Reload the Home Assistant browser tab.
 This ensures the icon list and frontend cache are fully re-initialized.
+
+> No Home Assistant restart or integration reload is required.
 
 ### Alternative (UIX)
 If your setup includes [UIX](https://uix.lf.technology/debugging/cache/?h=clear) support, you can trigger a frontend cache reset:
@@ -144,10 +146,27 @@ uix:
 
 > This clears the frontend cache, causing the icon list to be requested again without requiring a full browser reload.
 
+Add this action to a nice badge button in your sections view will do the trick:
+
+<img width="189" height="42" alt="clear frontend cache" src="https://github.com/user-attachments/assets/2632d80e-2501-44b0-92f6-025bcbd51995" />
+
+```yaml
+  - entity: input_select.theme
+    show_name: true
+    show_state: false
+    icon: mdi:broom
+    name: Clear Frontend Cache
+    tap_action: none
+    hold_action:
+      action: fire-dom-event
+      uix:
+        action: clear_cache
+```
 ⚠️ Notes
+
 The backend always reflects the latest filesystem state when /list is requested.
 The frontend caches icons for performance and does not continuously poll for changes.
-Icon updates are therefore only visible after a frontend refresh or cache clear action.
+Icon updates are therefore only visible after a view reload or cache clear action.
 
 
 ## ⚡ Performance
