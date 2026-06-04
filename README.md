@@ -248,7 +248,7 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## 📄 License
 
-See the LICENSE file for details.
+See the [LICENSE](LICENSE) file for details.
 
 ## 📊 Support
 
