@@ -13,12 +13,11 @@ A Home Assistant custom component for loading and displaying custom SVG icons fr
 
 ## ⚡ Features
 
-* 📂 Load SVG icons from a local folder
-* ⚡ Fast frontend rendering with in-memory caching
 * 🔍 Icon picker integration for UI selection
-* 🚀 Lazy loading with optional preloading
-* 🧩 Safe SVG parsing in the browser
+* 📂 Load SVG icons from a local folder
 * 🔄 Automatic icon discovery from local folders
+* ⚡ Fast frontend rendering
+* 🧩 Safe SVG parsing
 
 ## ✨ Summary
 
