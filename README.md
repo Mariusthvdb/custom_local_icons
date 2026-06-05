@@ -133,7 +133,7 @@ This ensures the icon list and frontend cache are fully re-initialized.
 > No Home Assistant restart or integration reload is required.
 
 ### Alternative (UIX)
-If your setup includes [UIX](https://uix.lf.technology/debugging/cache/?h=clear) support, you can trigger a frontend cache reset:
+If your setup includes [UIX](https://uix.lf.technology/debugging/cache/?h=clear) support, you can use the `clear_cache` action:
 ```yaml
 action: fire-dom-event
 uix:
