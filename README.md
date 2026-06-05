@@ -162,11 +162,11 @@ Adding this action to a badge in a Sections view provides a convenient way to re
       uix:
         action: clear_cache
 ```
-> ⚠️ Notes
->
-> The backend always reflects the latest filesystem state when /list is requested.
-> The frontend caches icons for performance and does not continuously poll for changes.
-> Icon updates are therefore only visible after a view reload or cache clear action.
+### ⚠️ Notes
+
+The backend always reflects the latest filesystem state when /list is requested.
+The frontend caches icons for performance and does not continuously poll for changes.
+Icon updates are therefore only visible after a view reload or cache clear action.
 
 ## ⚡ Performance
 
@@ -180,7 +180,7 @@ Adding this action to a badge in a Sections view provides a convenient way to re
   SVGs are parsed in the browser. Only valid path data is used. Unsafe content (scripts, event handlers) is rejected.
 
 
-## SVG Requirements
+## 🧩 SVG Requirements
 
 Your SVG files should follow these guidelines:
 
@@ -231,7 +231,7 @@ To view all icons currently detected by the integration, open:
 http://<home-assistant>/custom_local_icons/list
 ```
 
-> The `/custom_local_icons/list` endpoint is provided by the integration and is independent of the configured icon folder location.
+> The `/custom_local_icons/list` endpoint is provided by the integration and is independent of the configured icon folder.
 
 Example response:
 
