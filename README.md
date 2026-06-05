@@ -168,7 +168,6 @@ The backend always reflects the latest filesystem state when /list is requested.
 The frontend caches icons for performance and does not continuously poll for changes.
 Icon updates are therefore only visible after a view reload or cache clear action.
 
-
 ## ⚡ Performance
 
 * **Frontend caching**
@@ -222,6 +221,34 @@ SVG content is validated before rendering:
 
 
 ## 🧰 Troubleshooting
+
+### 🔍 Verify Icon Discovery
+
+To view all icons currently detected by the integration, open:
+
+```text
+http://<home-assistant>/custom_local_icons/list
+```
+
+> The `/custom_local_icons/list` endpoint is provided by the integration and is independent of the configured icon folder location.
+
+Example response:
+
+```json
+[
+  { "name": "home" },
+  { "name": "light-switch" },
+  { "name": "devices/sensor" }
+]
+```
+
+Icons can then be referenced as:
+
+```yaml
+icon: cli:home
+icon: cli:light-switch
+icon: cli:devices/sensor
+```
 
 ### Icons Not Appearing
 * **Check the folder path** - Verify the path in the config entry matches your icon folder
