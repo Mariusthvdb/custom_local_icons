@@ -8,6 +8,7 @@
 
 ![icon](https://github.com/user-attachments/assets/45507839-3aef-4682-9957-f27501ba883e)
 
+## ✨ Summary
 A Home Assistant custom component for loading and displaying custom SVG icons from your local filesystem. Perfect for adding organization-specific, branded, or personalized icons to your Home Assistant UI.
 
 
@@ -16,12 +17,8 @@ A Home Assistant custom component for loading and displaying custom SVG icons fr
 * 🔍 Icon picker integration for UI selection
 * 📂 Load SVG icons from a configurable local folder
 * 🔄 Automatic icon discovery
-* ⚡ Fast frontend rendering
+* ⚡ Optimized frontend rendering
 * 🛡 Secure SVG parsing
-
-## ✨ Summary
-
-Custom Local Icons provides a lightweight way to extend Home Assistant’s icon system using local SVG icons, with safe browser-based rendering and efficient frontend caching.
 
 
 ## 📦 Installation
@@ -97,32 +94,32 @@ lovelace:
 ```
 on the most versatile card of all, [custom:button-card](https://github.com/custom-cards/button-card)
 ```
-- type: custom:button-card
-  icon: >
-    [[[ return states['binary_sensor.rook_co_lekkage'].state === 'off'
-        ? 'cli:home-check' : 'mdi:home-alert'; ]]]
+type: custom:button-card
+icon: >
+  [[[ return states['binary_sensor.rook_co_lekkage'].state === 'off'
+      ? 'cli:home-check' : 'mdi:home-alert'; ]]]
 ```
 in a stock entities card:
 ```
-- type: entities
-  title: Custom local icons
-  entities:
-    - entity: switch.tester
-      name: Switch Light
-      icon: cli:light-switch
+type: entities
+title: Custom local icons
+entities:
+  - entity: switch.light
+    name: Light switch
+    icon: cli:light-switch
 ```
 or eg in a glance card with [UIX](https://uix.lf.technology/using/entities/) templates
 
 ```
-- type: glance
-  entities:
-    - entity: device_tracker.philips_hue_1
-      style: |
-        :host {
-          --uix-icon:
-            {% set con = states(config.entity) %}
-            cli:hue-bridge-v2{{'-off' if con == 'not_home'}};
-        }
+type: glance
+entities:
+  - entity: device_tracker.philips_hue_1
+    style: |
+      :host {
+        --uix-icon:
+          {% set con = states(config.entity) %}
+          cli:hue-bridge-v2{{'-off' if con == 'not_home'}};
+      }
 ```
 
 ## 🔄 Updating Icons
@@ -143,23 +140,23 @@ uix:
   action: clear_cache
 ```
 
-> This clears the frontend cache, causing the icon list to be requested again without requiring a full browser reload.
-
-Adding this action to a badge in a Sections view provides a convenient way to refresh the frontend cache:
+In a [badge](https://www.home-assistant.io/dashboards/badges/):
 
 <img width="189" height="42" alt="clear frontend cache" src="https://github.com/user-attachments/assets/2632d80e-2501-44b0-92f6-025bcbd51995" />
 
+This clears the frontend cache, causing the icon list to be requested again.
+
 ```yaml
-  - entity: input_select.theme
-    show_name: true
-    show_state: false
-    icon: mdi:broom
-    name: Clear Frontend Cache
-    tap_action: none
-    hold_action:
-      action: fire-dom-event
-      uix:
-        action: clear_cache
+entity: input_select.theme
+show_name: true
+show_state: false
+icon: mdi:broom
+name: Clear Frontend Cache
+tap_action: none
+hold_action:
+  action: fire-dom-event
+  uix:
+    action: clear_cache
 ```
 ### ⚠️ Notes
 
