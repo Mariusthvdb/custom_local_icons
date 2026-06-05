@@ -258,6 +258,7 @@ icon: cli:devices/sensor
 
 ### Error: "Invalid icon name"
 - Icon names can only contain alphanumeric characters, underscores, hyphens, and forward slashes
+- Icon names containing spaces are not supported
 - Example valid names: `my_icon`, `icon-1`, `folder/icon`
 
 ### Error: "Failed to load icon"
@@ -267,6 +268,9 @@ icon: cli:devices/sensor
 ### Error: "Blocked scripted SVG"
 - Your SVG contains embedded JavaScript or event handlers
 - Remove these elements from your SVG file
+
+> - Invalid or unsupported icons may appear in the icon list but will not render; a warning is logged in the browser console.
+<img width="435" height="47" alt="icon with spaces in name" src="https://github.com/user-attachments/assets/efd3226f-c7dd-42b4-bb16-842d43afcf27" />
 
 
 ## 🤝 Contributing
