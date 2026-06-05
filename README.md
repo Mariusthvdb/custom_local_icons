@@ -14,10 +14,10 @@ A Home Assistant custom component for loading and displaying custom SVG icons fr
 ## ⚡ Features
 
 * 🔍 Icon picker integration for UI selection
-* 📂 Load SVG icons from a local folder
-* 🔄 Automatic icon discovery from local folders
+* 📂 Load SVG icons from a configurable local folder
+* 🔄 Automatic icon discovery
 * ⚡ Fast frontend rendering
-* 🧩 Safe SVG parsing
+* 🛡 Secure SVG parsing
 
 ## ✨ Summary
 
@@ -173,13 +173,9 @@ Icon updates are therefore only visible after a view reload or cache clear actio
   Icons are cached in memory after first load for instant reuse.
   
 * **Loading strategy**
-  Icons load asynchronously and are rendered with a safe fallback until available. Frequently used icons are preloaded after initial list retrieval.
+  Icons load asynchronously and render with a safe fallback until available. Frequently used icons are preloaded after initial list retrieval.
 
-- **SVG processing**
-  SVGs are parsed in the browser. Only valid path data is used. Unsafe content (scripts, event handlers) is rejected.
-
-
-## 🧩 SVG Requirements
+## 📄 SVG Requirements
 
 Your SVG files should follow these guidelines:
 
@@ -277,7 +273,7 @@ icon: cli:devices/sensor
 
 Contributions are welcome! Please feel free to submit issues or pull requests.
 
-## 📄 License
+## ⚖️ License
 
 See the [LICENSE](LICENSE) file for details.
 
