@@ -18,7 +18,7 @@ A Home Assistant custom component for loading and displaying custom SVG icons fr
 * 🔍 Icon picker integration for UI selection
 * 🚀 Lazy loading with optional preloading
 * 🧩 Safe SVG parsing in the browser
-* 🔄 Live filesystem-based icon discovery
+* 🔄 Automatic icon discovery from local folders
 
 ## ✨ Summary
 
@@ -59,7 +59,7 @@ or:
 4. Enter your icon folder path (default: `www/custom_local_icons`)
 5. Click **Create Entry**
 
-## 📁 Icon Folder Structure
+### 📁 Icon Folder Structure
 
 Create your icon folder in your Home Assistant config directory:
 
@@ -146,7 +146,7 @@ uix:
 
 > This clears the frontend cache, causing the icon list to be requested again without requiring a full browser reload.
 
-Add this action to a nice badge button in your sections view will do the trick:
+Adding this action to a badge in a Sections view provides a convenient way to refresh the frontend cache:
 
 <img width="189" height="42" alt="clear frontend cache" src="https://github.com/user-attachments/assets/2632d80e-2501-44b0-92f6-025bcbd51995" />
 
@@ -162,11 +162,11 @@ Add this action to a nice badge button in your sections view will do the trick:
       uix:
         action: clear_cache
 ```
-⚠️ Notes
-
-The backend always reflects the latest filesystem state when /list is requested.
-The frontend caches icons for performance and does not continuously poll for changes.
-Icon updates are therefore only visible after a view reload or cache clear action.
+> ⚠️ Notes
+>
+> The backend always reflects the latest filesystem state when /list is requested.
+> The frontend caches icons for performance and does not continuously poll for changes.
+> Icon updates are therefore only visible after a view reload or cache clear action.
 
 ## ⚡ Performance
 
@@ -218,6 +218,7 @@ SVG content is validated before rendering:
 * SVG format only
 * Large icon sets may increase initial load time
 * Icons must be stored in the configured folder
+* Invalid or unsupported icons may appear in the icon list but will not render
 
 
 ## 🧰 Troubleshooting
@@ -269,7 +270,7 @@ icon: cli:devices/sensor
 - Your SVG contains embedded JavaScript or event handlers
 - Remove these elements from your SVG file
 
-> - Invalid or unsupported icons may appear in the icon list but will not render; a warning is logged in the browser console.
+> Invalid or unsupported icons may appear in the icon list but will not render; a warning is logged in the browser console.
 <img width="435" height="47" alt="icon with spaces in name" src="https://github.com/user-attachments/assets/efd3226f-c7dd-42b4-bb16-842d43afcf27" />
 
 
@@ -281,7 +282,7 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 See the [LICENSE](LICENSE) file for details.
 
-## 📊 Support
+## 💬 Support
 
 For issues, questions, or feature requests, please open an issue on [GitHub](https://github.com/Mariusthvdb/custom_local_icons/issues).
 
