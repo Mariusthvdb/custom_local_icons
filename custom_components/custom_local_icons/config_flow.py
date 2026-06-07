@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import logging
+
 from homeassistant import config_entries
 import voluptuous as vol
 
 DOMAIN = "custom_local_icons"
+LOGGER = logging.getLogger(__name__)
 
 
 class CustomLocalIconsConfigFlow(
@@ -40,6 +43,24 @@ class CustomLocalIconsConfigFlow(
             if not folder:
                 errors["user_folder"] = "required"
             else:
+                # Handle reconfiguration
+                if self.source == config_entries.SOURCE_RECONFIGURE:
+                    self.hass.config_entries.async_update_entry(
+                        self.config_entry,
+                        data={
+                            "user_folder": folder,
+                        },
+                    )
+                    LOGGER.info(
+                        "Custom Local Icons reconfigured with new folder: %s",
+                        folder,
+                    )
+                    await self.hass.config_entries.async_reload(
+                        self.config_entry.entry_id
+                    )
+                    return self.async_abort(reason="reconfigure_successful")
+
+                # Handle initial setup
                 return self.async_create_entry(
                     title="Custom Local Icons",
                     data={
@@ -47,11 +68,18 @@ class CustomLocalIconsConfigFlow(
                     },
                 )
 
+        # Get default folder from existing entry if reconfiguring
+        default_folder = "custom_local_icons"
+        if self.source == config_entries.SOURCE_RECONFIGURE:
+            default_folder = self.config_entry.data.get(
+                "user_folder", "custom_local_icons"
+            )
+
         schema = vol.Schema(
             {
                 vol.Required(
                     "user_folder",
-                    default="custom_local_icons",
+                    default=default_folder,
                 ): str,
             }
         )
