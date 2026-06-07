@@ -36,7 +36,7 @@ async function logIntegrationInfo() {
     );
 
     console.log("💬", description);
-    console.log("📄 Readme:", url);
+    console.log("�� Readme:", url);
 
     console.groupEnd();
 
@@ -57,6 +57,35 @@ async function logIntegrationInfo() {
 
     return null;
   }
+}
+
+/**
+ * Clear icon cache
+ * Call this after changing the folder configuration to refresh icons
+ * No restart required - just reload the view
+ */
+function clearCache() {
+  const count = Object.keys(ICON_STORE).length;
+  
+  // Clear all caches
+  Object.keys(ICON_STORE).forEach((key) => delete ICON_STORE[key]);
+  Object.keys(ICON_PROMISES).forEach((key) => delete ICON_PROMISES[key]);
+
+  console.info(
+    `%c✨ Cache cleared: ${count} icons removed from memory`,
+    "color: #4ade80; font-weight: bold;"
+  );
+
+  // Reload icon list and warm cache again
+  return getIconList().then((list) => {
+    list.forEach(({ name }) => {
+      getIcon(name);
+    });
+    console.info(
+      `%c✨ Cache rewarmed: ${list.length} icons preloading`,
+      "color: #4ade80; font-weight: bold;"
+    );
+  });
 }
 
 /**
@@ -183,10 +212,40 @@ const getIconList = async () => {
 };
 
 /**
+ * Monitor for config changes and auto-clear cache
+ * Detects when the integration reloads due to config changes
+ */
+let lastIconCount = 0;
+
+async function monitorConfigChanges() {
+  try {
+    const list = await getIconList();
+    const currentCount = list.length;
+
+    // If icon count changed significantly, clear cache and rewarm
+    if (lastIconCount > 0 && currentCount !== lastIconCount) {
+      console.info(
+        `%c🔄 Icon count changed from ${lastIconCount} to ${currentCount}. Refreshing cache...`,
+        "color: #fbbf24; font-weight: bold;"
+      );
+      await clearCache();
+    }
+
+    lastIconCount = currentCount;
+  } catch (err) {
+    console.warn(`[${DOMAIN}] Monitor error:`, err);
+  }
+}
+
+// Monitor config changes every 5 seconds
+setInterval(monitorConfigChanges, 5000);
+
+/**
  * Warm cache at startup (removes Safari/UIX race entirely)
  * Preload icons into cache for faster first render.
  */
 getIconList().then((list) => {
+  lastIconCount = list.length;
   list.forEach(({ name }) => {
     getIcon(name);
   });
@@ -203,6 +262,7 @@ logIntegrationInfo();
 window.getIcon = getIcon;
 window.getIconList = getIconList;
 window.logIntegrationInfo = logIntegrationInfo;
+window.clearCache = clearCache;
 
 /**
  * Register CLI icon set synchronously
@@ -212,4 +272,5 @@ window.customIcons ??= {};
 window.customIcons.cli = {
   getIcon,
   getIconList,
+  clearCache,
 };
