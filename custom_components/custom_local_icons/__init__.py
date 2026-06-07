@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 
-from homeassistant.components.frontend import add_extra_js_url
+from homeassistant.components.frontend import add_extra_js_url, remove_extra_js_url
 from homeassistant.components.http import StaticPathConfig
 
 from .const import DOMAIN, ICONS_URL, ICONLIST_URL, INFO_URL, LOADER_PATH, LOADER_URL
@@ -78,6 +78,12 @@ async def async_setup_entry(hass, entry):
 async def async_unload_entry(hass, entry):
     """Unload integration cleanly."""
 
+    # Remove frontend JS injection
+    remove_extra_js_url(hass, LOADER_URL)
+
+    # Clean up data
     hass.data[DOMAIN].pop(entry.entry_id, None)
+
+    LOGGER.info("Custom Local Icons unloaded")
 
     return True
