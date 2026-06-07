@@ -6,6 +6,59 @@ const ICON_PROMISES = {};
 const VALID_ICON_NAME = /^[a-zA-Z0-9_/-]+$/;
 
 console.info("[custom_local_icons] main.js loaded");
+
+/**
+ * Integration info
+ */
+async function logIntegrationInfo() {
+  const badgeStyle =
+    "color: white; background: linear-gradient(90deg, #41BDF5, #2C6ECB);" +
+    "padding: 2px 8px; font-weight: bold; border-radius: 0px;";
+
+  const errorStyle = "color:#ef4444;font-weight:700;";
+
+  const fallbackStyle =
+    "background:#374151;color:white;padding:2px 8px;border-radius:4px;";
+
+  try {
+    const res = await fetch(`/${DOMAIN}/info`);
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    const { name, version, description, url } = await res.json();
+
+    console.groupCollapsed(
+      `%c🏠🎨 ${name} is installed %c✨${version}`,
+      badgeStyle,
+      badgeStyle
+    );
+
+    console.log("💬", description);
+    console.log("📄 Readme:", url);
+
+    console.groupEnd();
+
+    return { name, version, description, url };
+  } catch (err) {
+    console.groupCollapsed(
+      `%c⚠️ ${DOMAIN} - Failed to load integration info`,
+      errorStyle
+    );
+
+    console.error(err);
+    console.groupEnd();
+
+    console.info(
+      `%c🧩 ${DOMAIN} loaded (no metadata available)`,
+      fallbackStyle
+    );
+
+    return null;
+  }
+}
+
 /**
  * Parse + sanitize SVG into CLI icon format
  * Async only used for background warming
@@ -140,10 +193,16 @@ getIconList().then((list) => {
 });
 
 /**
+ * Log integration info on startup
+ */
+logIntegrationInfo();
+
+/**
  * Expose API globally
  */
 window.getIcon = getIcon;
 window.getIconList = getIconList;
+window.logIntegrationInfo = logIntegrationInfo;
 
 /**
  * Register CLI icon set synchronously
