@@ -5,8 +5,6 @@ const ICON_PROMISES = {};
 
 const VALID_ICON_NAME = /^[a-zA-Z0-9_/-]+$/;
 
-console.info("[custom_local_icons] main.js loaded");
-
 /**
  * Integration info
  */
@@ -36,7 +34,7 @@ async function logIntegrationInfo() {
     );
 
     console.log("💬", description);
-    console.log("�� Readme:", url);
+    console.log("📄 Readme:", url);
 
     console.groupEnd();
 
@@ -61,8 +59,7 @@ async function logIntegrationInfo() {
 
 /**
  * Clear icon cache
- * Call this after changing the folder configuration to refresh icons
- * No restart required - just reload the view
+ * Called when configuration is reloaded
  */
 function clearCache() {
   const count = Object.keys(ICON_STORE).length;
@@ -72,26 +69,14 @@ function clearCache() {
   Object.keys(ICON_PROMISES).forEach((key) => delete ICON_PROMISES[key]);
 
   console.info(
-    `%c✨ Cache cleared: ${count} icons removed from memory`,
+    `%c✨ Cache cleared: ${count} icons removed`,
     "color: #4ade80; font-weight: bold;"
   );
-
-  // Reload icon list and warm cache again
-  return getIconList().then((list) => {
-    list.forEach(({ name }) => {
-      getIcon(name);
-    });
-    console.info(
-      `%c✨ Cache rewarmed: ${list.length} icons preloading`,
-      "color: #4ade80; font-weight: bold;"
-    );
-  });
 }
 
 /**
  * Parse + sanitize SVG into CLI icon format
- * Async only used for background warming
- * Preload icons into cache for faster first render.
+ * Async only used for on-demand loading
  */
 const preProcessIcon = async (iconName) => {
   const [icon, format] = iconName.split("#");
@@ -204,52 +189,8 @@ const getIconList = async () => {
 
   const icons = await response.json();
 
-  console.info(
-    `[${DOMAIN}] Loaded ${icons.length} icons from /${DOMAIN}/list`
-  );
-
   return icons;
 };
-
-/**
- * Monitor for config changes and auto-clear cache
- * Detects when the integration reloads due to config changes
- */
-let lastIconCount = 0;
-
-async function monitorConfigChanges() {
-  try {
-    const list = await getIconList();
-    const currentCount = list.length;
-
-    // If icon count changed significantly, clear cache and rewarm
-    if (lastIconCount > 0 && currentCount !== lastIconCount) {
-      console.info(
-        `%c🔄 Icon count changed from ${lastIconCount} to ${currentCount}. Refreshing cache...`,
-        "color: #fbbf24; font-weight: bold;"
-      );
-      await clearCache();
-    }
-
-    lastIconCount = currentCount;
-  } catch (err) {
-    console.warn(`[${DOMAIN}] Monitor error:`, err);
-  }
-}
-
-// Monitor config changes every 5 seconds
-setInterval(monitorConfigChanges, 5000);
-
-/**
- * Warm cache at startup (removes Safari/UIX race entirely)
- * Preload icons into cache for faster first render.
- */
-getIconList().then((list) => {
-  lastIconCount = list.length;
-  list.forEach(({ name }) => {
-    getIcon(name);
-  });
-});
 
 /**
  * Log integration info on startup
