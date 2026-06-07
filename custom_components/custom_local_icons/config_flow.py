@@ -1,3 +1,5 @@
+"""Config flow for Custom Local Icons."""
+
 from __future__ import annotations
 
 from homeassistant import config_entries
@@ -33,23 +35,23 @@ class CustomLocalIconsConfigFlow(
         errors = {}
 
         if user_input is not None:
-            folder = user_input.get("icon_folder", "").strip()
+            folder = user_input.get("user_folder", "").strip()
 
             if not folder:
-                errors["icon_folder"] = "required"
+                errors["user_folder"] = "required"
             else:
                 return self.async_create_entry(
                     title="Custom Local Icons",
                     data={
-                        "icon_folder": folder,
+                        "user_folder": folder,
                     },
                 )
 
         schema = vol.Schema(
             {
                 vol.Required(
-                    "icon_folder",
-                    default="www/custom_local_icons",
+                    "user_folder",
+                    default="custom_local_icons",
                 ): str,
             }
         )
