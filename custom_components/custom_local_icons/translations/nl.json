@@ -1,0 +1,28 @@
+{
+  "title": "Aangepaste Lokale pictogrammen",
+  "config": {
+    "abort": {
+      "single_instance_allowed": "Er is slechts één configuratie van Lokale pictogrammen toegestaan."
+    },
+    "step": {
+      "user": {
+        "title": "Lokale pictogrammen",
+        "description": "Voer de mapnaam in binnen /config/www",
+        "data": {
+          "icon_folder": "Mapnaam"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Lokale pictogrammen",
+        "description": "Voer de mapnaam in binnen /config/www",
+        "data": {
+          "icon_folder": "Mapnaam"
+        }
+      }
+    }
+  }
+}
