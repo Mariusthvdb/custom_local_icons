@@ -1,124 +1,68 @@
+"""Custom Local Icons integration."""
+
 from __future__ import annotations
 
-# Used to move blocking filesystem work off the HA event loop
-import asyncio
-
 import logging
-from os import path, walk
 
 from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.components.http import StaticPathConfig
-from homeassistant.components.http.view import HomeAssistantView
 
-DOMAIN = "custom_local_icons"
+from .const import (
+    DOMAIN,
+    LOADER_URL,
+    LOADER_PATH,
+    ICONS_URL,
+)
+
+from .view import ListingView, InfoView
 
 LOGGER = logging.getLogger(__name__)
 
-# Frontend JS entrypoint injected into Home Assistant
-LOADER_URL = f"/{DOMAIN}/main.js"
-LOADER_PATH = f"custom_components/{DOMAIN}/main.js"
 
-# Static SVG hosting endpoint
-ICONS_URL = f"/{DOMAIN}/icons"
+async def async_setup(hass, config):
+    """Global setup (register HTTP views once)."""
 
-# Icon picker requests this endpoint for available icon names
-ICONLIST_URL = f"/{DOMAIN}/list"
+    hass.http.register_view(ListingView())
+    hass.http.register_view(InfoView())
+
+    return True
 
 
-class ListingView(HomeAssistantView):
-    """HTTP endpoint that returns all available custom icons."""
+async def async_setup_entry(hass, entry) -> bool:
+    """Set up Custom Local Icons from config entry."""
 
-    # Must be public so Home Assistant frontend can access it
-    requires_auth = False
-
-    def __init__(self, url: str, iconpath: str) -> None:
-        self.url = url
-
-        # Absolute filesystem path to icon directory
-        self.iconpath = iconpath
-
-        self.name = "Custom Local Icons Listing"
-
-        # Cache to avoid repeated filesystem scans per HA lifecycle
-        self._cache: list[dict] | None = None
-
-    def _scan_icons(self) -> list[dict]:
-        """Scan filesystem and return icon list."""
-
-        icons = []
-
-        for dirpath, _, filenames in walk(self.iconpath):
-
-            # Convert absolute folder path into relative namespace
-            rel = dirpath[len(self.iconpath):].lstrip(path.sep)
-
-            for fn in filenames:
-                # Split filename into name + extension safely
-                name, ext = path.splitext(fn)
-
-                # Only accept SVG files
-                if ext.lower() != ".svg":
-                    continue
-
-                # Build icon name (preserves folder structure)
-                full_name = path.join(rel, name) if rel else name
-
-                icons.append({"name": full_name})
-
-        return icons
-
-    async def get(self, request):
-        """
-        Return icon list to frontend.
-
-        Important:
-        - Filesystem scanning is blocking I/O
-        - Must NOT run on HA event loop
-
-        Therefore:
-        - Offloaded to worker thread
-        - Cached after first execution
-        """
-
-#         # Return cached result if available
-#         if self._cache is None:
-#
-#             # Run blocking filesystem scan
-#             # in worker thread.
-#             self._cache = await asyncio.to_thread(self._scan_icons)
-#
-#         return self.json(self._cache)
-
-        icons = await asyncio.to_thread(self._scan_icons)
-
-        LOGGER.info(
-            "Custom Local Icons: serving %d icons",
-            len(icons),
-        )
-
-        return self.json(icons)
-
-async def async_setup_entry(hass, entry):
-    """Set up integration from config entry."""
+    first_entry = DOMAIN not in hass.data or not hass.data.get(DOMAIN)
 
     hass.data.setdefault(DOMAIN, {})
 
-    # User-configured folder (relative to HA config)
-    icon_folder = entry.data["icon_folder"].lstrip("/")
+    # -----------------------------------------------------
+    # Use options first (updated via OptionsFlow), fallback to data
+    # -----------------------------------------------------
+    icon_folder = (
+        entry.options.get(
+            "icon_folder",
+            entry.data["icon_folder"],
+        )
+    ).strip().lstrip("/")
 
-    # Convert to absolute filesystem path
-    icons_dir = hass.config.path(icon_folder)
+    # -----------------------------------------------------
+    # ALWAYS resolve inside /config/www
+    # -----------------------------------------------------
+    path = hass.config.path("www", icon_folder)
 
+    LOGGER.info("=== Custom Local Icons ===")
+    LOGGER.info("Icon folder: %s", icon_folder)
+    LOGGER.info("Path: %s", path)
+
+    # Store runtime data
     hass.data[DOMAIN][entry.entry_id] = {
         "icon_folder": icon_folder,
-        "icons_dir": icons_dir,
+        "path": path,
     }
 
-    # Register static routes:
-    #
-    # /custom_local_icons/main.js
-    # /custom_local_icons/icons/*
-    #
+    # -----------------------------------------------------
+    # Static paths (NO MANUAL UNREGISTER)
+    # -----------------------------------------------------
     static_paths = [
         StaticPathConfig(
             LOADER_URL,
@@ -127,38 +71,66 @@ async def async_setup_entry(hass, entry):
         ),
         StaticPathConfig(
             ICONS_URL,
-            icons_dir,
+            path,
             True,
         ),
     ]
 
     await hass.http.async_register_static_paths(static_paths)
 
-    # Register icon list endpoint:
-    #
-    # GET /custom_local_icons/list
-    #
-    hass.http.register_view(
-        ListingView(
-            ICONLIST_URL,
-            icons_dir,
-        )
-    )
+    # Load frontend script only once
+    if first_entry:
+        add_extra_js_url(hass, LOADER_URL)
 
-    # Inject frontend JS into HA UI
-    add_extra_js_url(hass, LOADER_URL)
+    # -----------------------------------------------------
+    # Reload listener (OptionsFlow support)
+    # -----------------------------------------------------
+    entry.async_on_unload(
+        entry.add_update_listener(async_update_listener)
+    )
 
     LOGGER.info(
         "Custom Local Icons loaded from folder: %s",
-        icons_dir,
+        path,
     )
 
     return True
 
 
-async def async_unload_entry(hass, entry):
-    """Unload integration cleanly."""
+async def async_unload_entry(hass, entry) -> bool:
+    """Unload integration."""
 
     hass.data[DOMAIN].pop(entry.entry_id, None)
 
+    if not hass.data[DOMAIN]:
+        try:
+            from homeassistant.components.frontend import remove_extra_js_url
+
+            remove_extra_js_url(hass, LOADER_URL)
+        except Exception:
+            pass
+
+        hass.data.pop(DOMAIN, None)
+
+    LOGGER.info("Custom Local Icons unloaded")
+
     return True
+
+
+# ---------------------------------------------------------
+# OptionsFlow reload hook
+# ---------------------------------------------------------
+async def async_update_listener(hass, entry):
+    """Reload integration when options change."""
+
+    new_folder = entry.options.get(
+        "icon_folder",
+        entry.data.get("icon_folder"),
+    )
+
+    LOGGER.info(
+        "Custom Local Icons configuration changed, reloading with folder: %s",
+        new_folder,
+    )
+
+    await hass.config_entries.async_reload(entry.entry_id)
