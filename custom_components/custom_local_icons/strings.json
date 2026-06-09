@@ -1,0 +1,28 @@
+{
+  "title": "Custom local icons",
+  "config": {
+    "abort": {
+      "single_instance_allowed": "Only a single configuration of Custom local icons is allowed."
+    },
+    "step": {
+      "user": {
+        "title": "Custom local icons",
+        "description": "Enter the folder name inside /config/www",
+        "data": {
+          "icon_folder": "Folder name"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Custom local icons",
+        "description": "Enter the folder name inside /config/www",
+        "data": {
+          "icon_folder": "Folder name"
+        }
+      }
+    }
+  }
+}
