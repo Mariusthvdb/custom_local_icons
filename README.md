@@ -177,7 +177,7 @@ Icon updates are therefore only visible after a view reload or cache clear actio
 Your SVG files should follow these guidelines:
 
 * **Valid SVG Format** - Must be valid XML
-* **Viewbox Attribute** - Should include a `viewBox` attribute (defaults to `0 0 24 24`)
+* **Viewbox Attribute** - Used as-is when present. If missing or empty, defaults to 0 0 24 24
 * **Path Elements** - Use `<path>` elements for icon shapes
 * **No Scripts** - Embedded `<script>` tags are blocked for security
 * **No Event Handlers** - Event handlers (`onclick`, `onload`, etc.) are blocked
@@ -212,8 +212,61 @@ SVG content is validated before rendering:
 * Icons must be stored in the configured folder
 * Invalid or unsupported icons may appear in the icon list but will not render
 
+## 🧠 Logging & Debugging
+Custom Local Icons provides lightweight logging in both backend and frontend.
+
+### Backend logs 🧱
+* file access
+* API responses
+* integration-level issues
+
+### Frontend logs 🧩
+* SVG parsing results
+* validation warnings
+* optional debug diagnostics
+
+### Debug mode 🐞
+Enable debug mode setting
+```yaml
+const DEBUG = true;
+```
+manually in main.js
+
+When enabled:
+* viewBox deviations are logged
+* per-icon parsing details are shown
+* additional SVG diagnostics appear in console
+
+When disabled:
+* only warnings/errors are shown
+
+> Logging is for debugging only and does not reflect final render behavior.
 
 ## 🧰 Troubleshooting
+
+### Icons Not Appearing
+
+### 🔍 Icon not showing in picker
+Check:
+* file is in correct folder
+* valid filename (no spaces)
+* /list endpoint includes it
+
+### 🎨 Icon appears but does not render
+Common causes:
+* Complex SVG features (transforms, masks, filters, grouped elements) may render differently because only <path> geometry is extracted.
+* complex editor exports (Inkscape / Illustrator)
+* missing or unusual viewBox (usually non-fatal)
+
+> Note: Icons may preview correctly in file managers, but frontend rendering depends on simplified SVG path extraction.
+
+### 🚫 Invalid icon name
+Allowed:
+a-z A-Z 0-9 _ - /
+
+Not allowed:
+* spaces
+* special characters
 
 ### 🔍 Verify Icon Discovery
 
@@ -243,12 +296,6 @@ icon: cli:light-switch
 icon: cli:devices/sensor
 ```
 
-### Icons Not Appearing
-* **Check the folder path** - Verify the path in the config entry matches your icon folder
-* **Check file names** - Use lowercase names without spaces
-* **Verify SVG format** - Ensure SVG files are valid XML
-* **Check Home Assistant logs** - Look for error messages in Settings → System → Logs
-
 ### Error: "Invalid icon name"
 - Icon names can only contain alphanumeric characters, underscores, hyphens, and forward slashes
 - Icon names containing spaces are not supported
@@ -262,9 +309,18 @@ icon: cli:devices/sensor
 - Your SVG contains embedded JavaScript or event handlers
 - Remove these elements from your SVG file
 
-> Invalid or unsupported icons may appear in the icon list but will not render; a warning is logged in the browser console.
+> Invalid or unsupported icons may appear in the backend icon /list but will not render in the frontend icon picker or view; a warning is logged in the browser console.
 <img width="435" height="47" alt="icon with spaces in name" src="https://github.com/user-attachments/assets/efd3226f-c7dd-42b4-bb16-842d43afcf27" />
 
+In other words:
+> The icon list reflects filesystem discovery and may include icons that fail validation or rendering at runtime.
+
+## 🔧 Design notes
+This system intentionally separates:
+* discovery (backend)
+* rendering (frontend)
+* validation (runtime best-effort)
+This avoids blocking icons from appearing while still protecting rendering stability.
 
 ## 🤝 Contributing
 
