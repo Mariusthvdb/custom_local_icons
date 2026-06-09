@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.3.1] - 2026-06-09
+
+### ✨ Added
+- Clear separation between icon discovery (/list) and rendering pipeline
+- Improved troubleshooting documentation for icon picker vs rendering mismatch
+- Optional frontend DEBUG mode for SVG parsing diagnostics
+- Enhanced logging guidance for backend and frontend
+
+### 🐛 Fixed
+- Icons appearing in list but failing to render now properly documented and explained
+- Clarified handling of complex SVGs (Inkscape / Illustrator exports)
+- Improved consistency in invalid icon name reporting
+
+### ⚠️ Changed
+- `/list` endpoint now explicitly considered discovery-only (no render guarantees)
+- Rendering pipeline remains best-effort and does not filter discovery results
+- SVG rendering limited to `<path>` extraction only (no full SVG feature support)
+- Console logs are now explicitly diagnostic-only
+  
 # [1.2.0] - 2026-06-03
 
 ## Added
