@@ -1,12 +1,13 @@
 {
-  "title": "Custom local icons",
+  "title": "Custom Local Icons",
+
   "config": {
     "abort": {
-      "single_instance_allowed": "Only a single configuration of Custom local icons is allowed."
+      "single_instance_allowed": "Only a single configuration of Custom Local Icons is allowed."
     },
     "step": {
       "user": {
-        "title": "Custom local icons",
+        "title": "Custom Local Icons",
         "description": "Enter the folder name inside /config/www",
         "data": {
           "icon_folder": "Folder name"
@@ -14,13 +15,15 @@
       }
     }
   },
+
   "options": {
     "step": {
       "init": {
-        "title": "Custom local icons",
-        "description": "Enter the folder name inside /config/www",
+        "title": "Custom Local Icons options",
+        "description": "Configure icon folder and frontend debug settings",
         "data": {
-          "icon_folder": "Folder name"
+          "icon_folder": "Folder name",
+          "frontend_debug": "Enable Frontend debug logging"
         }
       }
     }
