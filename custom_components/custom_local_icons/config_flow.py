@@ -9,9 +9,26 @@ import voluptuous as vol
 
 from homeassistant import config_entries
 
-DOMAIN = "custom_local_icons"
+from .const import DOMAIN, OPTION_FRONTEND_DEBUG, DEFAULT_FRONTEND_DEBUG
 
 LOGGER = logging.getLogger(__name__)
+
+
+def validate_folder(hass, folder: str) -> str | None:
+    """Validate folder inside /config/www."""
+
+    if not folder:
+        return "required"
+
+    abs_path = hass.config.path("www", folder)
+
+    try:
+        if not path.isdir(abs_path):
+            return "folder_not_found"
+    except Exception:
+        return "invalid_path"
+
+    return None
 
 
 class CustomLocalIconsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -30,7 +47,7 @@ class CustomLocalIconsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             folder = (user_input.get("icon_folder") or "").strip().lstrip("/")
 
-            error = self._validate_folder(folder)
+            error = validate_folder(self.hass, folder)
 
             if error:
                 errors["icon_folder"] = error
@@ -50,22 +67,6 @@ class CustomLocalIconsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def async_get_options_flow(config_entry):
         """Return options flow."""
         return CustomLocalIconsOptionsFlow()
-
-    def _validate_folder(self, folder: str) -> str | None:
-        """Validate folder inside /config/www."""
-
-        if not folder:
-            return "required"
-
-        abs_path = self.hass.config.path("www", folder)
-
-        try:
-            if not path.isdir(abs_path):
-                return "folder_not_found"
-        except Exception:
-            return "invalid_path"
-
-        return None
 
     @staticmethod
     def _schema(default: str):
@@ -92,8 +93,6 @@ class CustomLocalIconsOptionsFlow(config_entries.OptionsFlow):
             dict(self.config_entry.options),
         )
 
-        errors = {}
-
         current_folder = self.config_entry.options.get(
             "icon_folder",
             self.config_entry.data.get(
@@ -102,22 +101,45 @@ class CustomLocalIconsOptionsFlow(config_entries.OptionsFlow):
             ),
         )
 
+        current_debug = self.config_entry.options.get(
+            OPTION_FRONTEND_DEBUG,
+            DEFAULT_FRONTEND_DEBUG,
+        )
+
+        errors = {}
+
         if user_input is not None:
             folder = (user_input.get("icon_folder") or "").strip().lstrip("/")
+            new_debug = user_input.get(
+                OPTION_FRONTEND_DEBUG,
+                DEFAULT_FRONTEND_DEBUG,
+            )
 
-            error = self._validate_folder(folder)
+            error = validate_folder(self.hass, folder)
 
             if error:
                 errors["icon_folder"] = error
             else:
-                LOGGER.info(
-                    "Custom Local Icons configuration changed, new folder: %s",
-                    folder,
-                )
+                if folder != current_folder:
+                    LOGGER.info(
+                        "Custom Local Icons folder changed: %s → %s",
+                        current_folder,
+                        folder,
+                    )
+
+                if new_debug != current_debug:
+                    LOGGER.info(
+                        "Custom Local Icons debug changed: %s → %s",
+                        current_debug,
+                        new_debug,
+                    )
 
                 return self.async_create_entry(
-                    title="",
-                    data={"icon_folder": folder},
+                    title=None,
+                    data={
+                        "icon_folder": folder,
+                        OPTION_FRONTEND_DEBUG: new_debug,
+                    },
                 )
 
         return self.async_show_form(
@@ -128,23 +150,11 @@ class CustomLocalIconsOptionsFlow(config_entries.OptionsFlow):
                         "icon_folder",
                         default=current_folder,
                     ): str,
+                    vol.Required(
+                        OPTION_FRONTEND_DEBUG,
+                        default=current_debug,
+                    ): bool,
                 }
             ),
             errors=errors,
         )
-
-    def _validate_folder(self, folder: str) -> str | None:
-        """Validate folder inside /config/www."""
-
-        if not folder:
-            return "required"
-
-        abs_path = self.hass.config.path("www", folder)
-
-        try:
-            if not path.isdir(abs_path):
-                return "folder_not_found"
-        except Exception:
-            return "invalid_path"
-
-        return None
