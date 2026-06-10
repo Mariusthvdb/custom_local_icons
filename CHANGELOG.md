@@ -1,5 +1,37 @@
 # Changelog
 
+## Version [1.4.0] - 2026-06-10
+
+### Added
+
+* Added a new **Frontend Debug Logging** option in the integration options flow.
+* Added frontend debug state to the `/custom_local_icons/info` endpoint.
+* Added configurable frontend debug logging in `main.js`.
+* Added browser console visibility for current frontend debug status.
+
+### Changed
+
+* Refactored folder validation into a shared helper function.
+* Improved options flow logging to only report actual configuration changes.
+* Added separate logging for folder changes and frontend debug changes.
+* Renamed debug option constants to clearly distinguish frontend debugging from Home Assistant integration log levels.
+* Updated runtime storage to expose frontend debug configuration to the frontend.
+* Improved integration metadata reporting and diagnostics.
+
+### Translations
+
+* Added translation support for the new frontend debug option.
+* Added Dutch translations.
+* Migrated to a modern translation structure using dedicated translation files.
+
+### Internal
+
+* Cleaned up configuration flow implementation.
+* Reduced duplicated validation logic.
+* Improved runtime data handling in `__init__.py`.
+* Improved consistency of logging and configuration management.
+* Refactored path handling to consistently use the resolved icon base path.
+
 ## [1.3.1] - 2026-06-09
 
 ### ✨ Added
