@@ -7,7 +7,14 @@ from os import path, walk
 
 from homeassistant.components.http.view import HomeAssistantView
 
-from .const import DOMAIN, NAME, VERSION, DESCRIPTION, URL
+from .const import (
+  DOMAIN,
+  NAME,
+  DESCRIPTION,
+  URL,
+  DEFAULT_FRONTEND_DEBUG,
+  VERSION,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -83,12 +90,20 @@ class InfoView(HomeAssistantView):
         base_path = entry.get("path")
         icon_folder = entry.get("icon_folder")
 
+        # -----------------------------------------------------
+        # SVG counting (blocking FS moved to executor)
+        # -----------------------------------------------------
         def get_svg_count():
             if not base_path:
                 return 0
             return len(scan_icons(base_path))
 
         svg_count = await hass.async_add_executor_job(get_svg_count)
+
+        # -----------------------------------------------------
+        # DEBUG FLAG (frontend toggle)
+        # -----------------------------------------------------
+        debug = entry.get("debug", DEFAULT_FRONTEND_DEBUG)
 
         return self.json(
             {
@@ -100,5 +115,6 @@ class InfoView(HomeAssistantView):
                 "icon_folder": icon_folder,
                 "path": base_path,
                 "svg_count": svg_count,
+                "debug": debug,
             }
         )
