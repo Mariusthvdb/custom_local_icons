@@ -55,6 +55,8 @@ or:
 4. Enter your icon folder path (default: `www/custom_local_icons`)
 5. Click **Create Entry**
 
+> The folder can later be changed through the integration's Options menu.
+
 ### 📁 Icon Folder Structure
 
 Create your icon folder in your Home Assistant config directory:
@@ -220,22 +222,18 @@ Custom Local Icons provides lightweight logging in both backend and frontend.
 * API responses
 * integration-level issues
 
-### Frontend logs 🧩
-* SVG parsing results
-* validation warnings
-* optional debug diagnostics
+### Frontend Debug Logging 🐞
 
-### Debug mode 🐞
-Enable debug mode setting
-```yaml
-const DEBUG = true;
-```
-manually in main.js
+If icons are not loading as expected, enable **Frontend debug logging** in the integration options and open your browser developer console.
 
-When enabled:
-* viewBox deviations are logged
-* per-icon parsing details are shown
-* additional SVG diagnostics appear in console
+Additional information will be displayed, including:
+
+* Integration metadata
+* Icon count
+* Icon list endpoint
+* Integration info endpoint
+* SVG viewBox deviations
+* Icon loading diagnostics
 
 When disabled:
 * only warnings/errors are shown
