@@ -1,12 +1,13 @@
 {
-  "title": "Aangepaste Lokale pictogrammen",
+  "title": "Aangepaste locale pictogrammen",
+
   "config": {
     "abort": {
-      "single_instance_allowed": "Er is slechts één configuratie van Lokale pictogrammen toegestaan."
+      "single_instance_allowed": "Er kan slechts één configuratie van Custom Local Icons worden toegevoegd."
     },
     "step": {
       "user": {
-        "title": "Lokale pictogrammen",
+        "title": "Aangepaste locale pictogrammen",
         "description": "Voer de mapnaam in binnen /config/www",
         "data": {
           "icon_folder": "Mapnaam"
@@ -14,13 +15,15 @@
       }
     }
   },
+
   "options": {
     "step": {
       "init": {
-        "title": "Lokale pictogrammen",
-        "description": "Voer de mapnaam in binnen /config/www",
+        "title": "Aangepaste locale pictogrammen opties",
+        "description": "Configureer icon map en frontend debug instellingen",
         "data": {
-          "icon_folder": "Mapnaam"
+          "icon_folder": "Mapnaam",
+          "frontend_debug": "Frontend debug logging inschakelen"
         }
       }
     }
