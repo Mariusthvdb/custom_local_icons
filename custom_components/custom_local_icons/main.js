@@ -12,7 +12,7 @@ const EMPTY_ICON = {
   path: "",
 };
 
-const DEBUG = false;
+let DEBUG = false;
 
 /**
  * Integration info
@@ -37,6 +37,8 @@ async function logIntegrationInfo() {
 
     const info = await res.json();
 
+    DEBUG = info?.debug === true;
+
     const { name, version, description, url, path, svg_count } = info;
 
     console.groupCollapsed(
@@ -47,9 +49,16 @@ async function logIntegrationInfo() {
 
     console.log("💬", description);
     console.log("📄 Readme: %s", url);
-    console.log("📁 Path:", path);
-    console.log("📦 Icons:", svg_count);
+    console.log("🐞 Frontend debug mode:", DEBUG);
 
+    if (DEBUG) {
+      const base = window.location.origin;
+
+      console.log("📁 Path:", path);
+      console.log("📦 Icons:", svg_count);
+      console.log("ℹ️ Integration info: %s", `${base}/${DOMAIN}/info`);
+      console.log("📋 Icon list: %s", `${base}/${DOMAIN}/list`);
+    }
     console.groupEnd();
 
     return info;
