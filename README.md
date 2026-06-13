@@ -11,6 +11,7 @@
 ## ✨ Summary
 A Home Assistant custom component for loading and displaying custom SVG icons from your local filesystem. Perfect for adding organization-specific, branded, or personalized icons to your Home Assistant UI.
 
+Use the [Gallery card](https://github.com/Mariusthvdb/Custom-local-icons-gallery-card) to display your local icons
 
 ## ⚡ Features
 
