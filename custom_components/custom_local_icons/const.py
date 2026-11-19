@@ -25,4 +25,4 @@ INFO_URL = f"/{DOMAIN}/info"
 OPTION_FRONTEND_DEBUG = "frontend_debug"
 DEFAULT_FRONTEND_DEBUG = False
 
-VERSION = "1.4.0"
+VERSION = "1.5.0"
