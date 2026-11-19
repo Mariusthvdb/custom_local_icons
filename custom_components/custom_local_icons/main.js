@@ -12,6 +12,9 @@ const EMPTY_ICON = {
   path: "",
 };
 
+const INVALID_ICONS = [];
+const VIEWBOX_DEVIATIONS = [];
+
 let DEBUG = false;
 
 /**
@@ -50,6 +53,9 @@ async function logIntegrationInfo() {
     console.log("💬", description);
     console.log("📄 Readme: %s", url);
     console.log("🐞 Frontend debug mode:", DEBUG);
+    const base = window.location.origin;
+    console.log("⚙️ Integration settings: %s",
+                `${base}/config/integrations/integration/${DOMAIN}`);
 
     if (DEBUG) {
       const base = window.location.origin;
@@ -93,6 +99,7 @@ const preProcessIcon = async (iconName) => {
 
   if (!icon || icon.includes("..") || !VALID_ICON_NAME.test(icon)) {
     console.warn(`[${DOMAIN}] Invalid icon name: ${icon}`);
+    INVALID_ICONS.push({ iconName, reason: "Invalid icon name" });
     return null;
   }
 
@@ -144,6 +151,11 @@ const preProcessIcon = async (iconName) => {
   }
 
   if (DEBUG && viewBox !== VIEWBOX) {
+    VIEWBOX_DEVIATIONS.push({
+      icon,
+      viewBox,
+      pathLength: path.length,
+    });
 
     console.debug(
       `[${DOMAIN}] viewBox deviation in ${icon}: ${viewBox} (expected ${VIEWBOX}) | path length: ${path.length}`
@@ -208,8 +220,33 @@ const getIconList = async () => {
 /**
  * Warm cache
  */
+async function flushDebugLogs() {
+  await Promise.allSettled(Object.values(ICON_PROMISES));
+
+  if (DEBUG && VIEWBOX_DEVIATIONS.length) {
+    console.groupCollapsed(
+      `📐 ${VIEWBOX_DEVIATIONS.length} viewBox deviations`
+    );
+    VIEWBOX_DEVIATIONS.forEach((e) => {
+      console.log("%s → %s (%s)", e.icon, e.viewBox, e.pathLength);
+    });
+    console.groupEnd();
+  }
+
+  if (DEBUG && INVALID_ICONS.length) {
+    console.groupCollapsed(
+      `🚫 ${INVALID_ICONS.length} invalid icons`
+    );
+    INVALID_ICONS.forEach((e) => {
+      console.log("%s → %s", e.iconName || e.icon, e.reason);
+    });
+    console.groupEnd();
+  }
+}
+
 getIconList().then((list) => {
   list.forEach(({ name }) => getIcon(name));
+  flushDebugLogs();
 });
 
 /**

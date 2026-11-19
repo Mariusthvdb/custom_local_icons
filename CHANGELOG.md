@@ -1,5 +1,22 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+* Frontend debug extras in `main.js`: `INVALID_ICONS` / `VIEWBOX_DEVIATIONS` tracking with grouped console summaries via `flushDebugLogs()`, plus a direct link to the integration settings page in the console banner.
+* New `helpers.py` with `normalize_folder`, `validate_folder` and `get_icon_folder` to remove duplicated folder handling in `__init__.py` and `config_flow.py`.
+* `CONF_ICON_FOLDER` / `DEFAULT_ICON_FOLDER` constants in `const.py`.
+* Proper form selectors (`TextSelector`, `BooleanSelector`) in the config and options flows.
+
+### Security
+
+* `/custom_local_icons/list` and `/custom_local_icons/info` now require authentication (`requires_auth = True`).
+
+### Internal
+
+* Declared minimum Home Assistant version `2024.11.0` in `hacs.json` (options flow relies on `self.config_entry`).
+
 ## Version [1.4.0] - 2026-06-10
 
 ### Added

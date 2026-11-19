@@ -5,6 +5,10 @@ DOMAIN = "custom_local_icons"
 NAME = "Custom Local Icons"
 URL = "https://github.com/Mariusthvdb/custom_local_icons"
 
+# Configuration keys (stored in config_entry.data/options)
+CONF_ICON_FOLDER = "icon_folder"
+DEFAULT_ICON_FOLDER = "custom_local_icons"
+
 # Frontend loader
 LOADER_URL = f"/{DOMAIN}/main.js"
 LOADER_PATH = f"custom_components/{DOMAIN}/main.js"
