@@ -8,15 +8,18 @@ from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.components.http import StaticPathConfig
 
 from .const import (
-    DOMAIN,
-    LOADER_URL,
-    LOADER_PATH,
-    ICONS_URL,
-    OPTION_FRONTEND_DEBUG,
+    CONF_ICON_FOLDER,
     DEFAULT_FRONTEND_DEBUG,
+    DOMAIN,
+    ICONS_URL,
+    LOADER_PATH,
+    LOADER_URL,
+    NAME,
+    OPTION_FRONTEND_DEBUG,
 )
 
 from .view import ListingView, InfoView
+from .helpers import get_icon_folder
 
 LOGGER = logging.getLogger(__name__)
 
@@ -40,9 +43,7 @@ async def async_setup_entry(hass, entry) -> bool:
     # -----------------------------------------------------
     # Resolve config (options override data)
     # -----------------------------------------------------
-    icon_folder = (
-        entry.options.get("icon_folder", entry.data["icon_folder"])
-    ).strip().lstrip("/")
+    icon_folder = get_icon_folder(entry).strip().lstrip("/")
 
     # -----------------------------------------------------
     # Resolve filesystem path
@@ -51,14 +52,14 @@ async def async_setup_entry(hass, entry) -> bool:
 
     debug = entry.options.get(OPTION_FRONTEND_DEBUG, DEFAULT_FRONTEND_DEBUG)
 
-    LOGGER.info("=== Custom Local Icons ===")
+    LOGGER.info("=== %s ===", NAME)
     LOGGER.info("Icon folder: %s", icon_folder)
     LOGGER.info("Path: %s", base_path)
     LOGGER.info("Frontend debug: %s", debug)
 
     # Store runtime data
     hass.data[DOMAIN][entry.entry_id] = {
-        "icon_folder": icon_folder,
+        CONF_ICON_FOLDER: icon_folder,
         "path": base_path,
         "debug": debug,
     }
@@ -92,10 +93,7 @@ async def async_setup_entry(hass, entry) -> bool:
         entry.add_update_listener(async_update_listener)
     )
 
-    LOGGER.info(
-        "Custom Local Icons loaded from folder: %s",
-        base_path,
-    )
+    LOGGER.info("%s loaded", NAME)
 
     return True
 
@@ -115,7 +113,7 @@ async def async_unload_entry(hass, entry) -> bool:
 
         hass.data.pop(DOMAIN, None)
 
-    LOGGER.info("Custom Local Icons unloaded")
+    LOGGER.info("%s unloaded", NAME)
 
     return True
 
@@ -126,10 +124,11 @@ async def async_unload_entry(hass, entry) -> bool:
 async def async_update_listener(hass, entry):
     """Reload integration when options change."""
 
-    new_folder = entry.options.get("icon_folder", entry.data.get("icon_folder"))
+    new_folder = get_icon_folder(entry)
 
     LOGGER.info(
-        "Custom Local Icons configuration changed, reloading with folder: %s",
+        "%s configuration changed, reloading with folder: %s",
+        NAME,
         new_folder,
     )
 

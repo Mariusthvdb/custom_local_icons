@@ -3,32 +3,29 @@
 from __future__ import annotations
 
 import logging
-from os import path
 
 import voluptuous as vol
 
 from homeassistant import config_entries
+from homeassistant.helpers.selector import (
+    BooleanSelector,
+    TextSelector,
+    TextSelectorConfig,
+    TextSelectorType,
+)
 
-from .const import DOMAIN, OPTION_FRONTEND_DEBUG, DEFAULT_FRONTEND_DEBUG
+from .const import (
+    CONF_ICON_FOLDER,
+    DEFAULT_FRONTEND_DEBUG,
+    DEFAULT_ICON_FOLDER,
+    DOMAIN,
+    NAME,
+    OPTION_FRONTEND_DEBUG,
+)
+
+from .helpers import normalize_folder, validate_folder
 
 LOGGER = logging.getLogger(__name__)
-
-
-def validate_folder(hass, folder: str) -> str | None:
-    """Validate folder inside /config/www."""
-
-    if not folder:
-        return "required"
-
-    abs_path = hass.config.path("www", folder)
-
-    try:
-        if not path.isdir(abs_path):
-            return "folder_not_found"
-    except Exception:
-        return "invalid_path"
-
-    return None
 
 
 class CustomLocalIconsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -45,21 +42,31 @@ class CustomLocalIconsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
-            folder = (user_input.get("icon_folder") or "").strip().lstrip("/")
-
+            folder = normalize_folder(user_input.get(CONF_ICON_FOLDER))
             error = validate_folder(self.hass, folder)
 
             if error:
-                errors["icon_folder"] = error
+                errors[CONF_ICON_FOLDER] = error
             else:
                 return self.async_create_entry(
-                    title="Custom Local Icons",
-                    data={"icon_folder": folder},
+                    title=NAME,
+                    data={CONF_ICON_FOLDER: folder},
                 )
 
         return self.async_show_form(
             step_id="user",
-            data_schema=self._schema("custom_local_icons"),
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_ICON_FOLDER,
+                        default=DEFAULT_ICON_FOLDER,
+                    ): TextSelector(
+                        TextSelectorConfig(
+                            type=TextSelectorType.TEXT,
+                        )
+                    ),
+                }
+            ),
             errors=errors,
         )
 
@@ -68,36 +75,18 @@ class CustomLocalIconsConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Return options flow."""
         return CustomLocalIconsOptionsFlow()
 
-    @staticmethod
-    def _schema(default: str):
-        """Build form schema."""
-
-        return vol.Schema(
-            {
-                vol.Required(
-                    "icon_folder",
-                    default=default,
-                ): str,
-            }
-        )
-
 
 class CustomLocalIconsOptionsFlow(config_entries.OptionsFlow):
-    """Handle options."""
+    """Handle options flow."""
 
     async def async_step_init(self, user_input=None):
         """Manage options."""
 
-        LOGGER.info(
-            "Custom Local Icons options opened. Current options: %s",
-            dict(self.config_entry.options),
-        )
-
         current_folder = self.config_entry.options.get(
-            "icon_folder",
+            CONF_ICON_FOLDER,
             self.config_entry.data.get(
-                "icon_folder",
-                "custom_local_icons",
+                CONF_ICON_FOLDER,
+                DEFAULT_ICON_FOLDER,
             ),
         )
 
@@ -109,7 +98,7 @@ class CustomLocalIconsOptionsFlow(config_entries.OptionsFlow):
         errors = {}
 
         if user_input is not None:
-            folder = (user_input.get("icon_folder") or "").strip().lstrip("/")
+            folder = normalize_folder(user_input.get(CONF_ICON_FOLDER))
             new_debug = user_input.get(
                 OPTION_FRONTEND_DEBUG,
                 DEFAULT_FRONTEND_DEBUG,
@@ -118,26 +107,12 @@ class CustomLocalIconsOptionsFlow(config_entries.OptionsFlow):
             error = validate_folder(self.hass, folder)
 
             if error:
-                errors["icon_folder"] = error
+                errors[CONF_ICON_FOLDER] = error
             else:
-                if folder != current_folder:
-                    LOGGER.info(
-                        "Custom Local Icons folder changed: %s → %s",
-                        current_folder,
-                        folder,
-                    )
-
-                if new_debug != current_debug:
-                    LOGGER.info(
-                        "Custom Local Icons debug changed: %s → %s",
-                        current_debug,
-                        new_debug,
-                    )
-
                 return self.async_create_entry(
-                    title=None,
+                    title="",
                     data={
-                        "icon_folder": folder,
+                        CONF_ICON_FOLDER: folder,
                         OPTION_FRONTEND_DEBUG: new_debug,
                     },
                 )
@@ -147,13 +122,17 @@ class CustomLocalIconsOptionsFlow(config_entries.OptionsFlow):
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        "icon_folder",
+                        CONF_ICON_FOLDER,
                         default=current_folder,
-                    ): str,
-                    vol.Required(
+                    ): TextSelector(
+                        TextSelectorConfig(
+                            type=TextSelectorType.TEXT,
+                        )
+                    ),
+                    vol.Optional(
                         OPTION_FRONTEND_DEBUG,
                         default=current_debug,
-                    ): bool,
+                    ): BooleanSelector(),
                 }
             ),
             errors=errors,
