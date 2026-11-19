@@ -1,6 +1,6 @@
 # Custom Local Icons
 
-![marketplace_badge](https://img.shields.io/badge/Marketplace-Custom-blue?logo=homeassistantcommunitystore&logoColor=white)
+![marketplace_badge](https://img.shields.io/badge/Marketplace-Default-blue?logo=homeassistantcommunitystore&logoColor=white)
 [![GH-release](https://img.shields.io/github/v/release/Mariusthvdb/custom_local_icons.svg?style=flat-square)](https://github.com/Mariusthvdb/custom_local_icons/releases)
 [![GH-downloads](https://img.shields.io/github/downloads/Mariusthvdb/custom_local_icons/total)](https://github.com/Mariusthvdb/custom_local_icons/releases)
 [![GH-last-commit](https://img.shields.io/github/last-commit/Mariusthvdb/custom_local_icons.svg?style=flat-square)](https://github.com/Mariusthvdb/custom_local_icons/commits/master)
