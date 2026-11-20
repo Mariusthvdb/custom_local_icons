@@ -71,6 +71,10 @@ Create your icon folder in your Home Assistant config directory:
 │   └── icon4.svg
 ```
 
+> [!IMPORTANT]
+> The icon folder must exist — if `www/custom_local_icons` doesn't exist yet, create it first, or point the integration to any other existing folder of your choice (default: `www/custom_local_icons`, changeable later in Options).
+
+
 ### Icon Format
 Use the prefix `cli:` followed by your icon name:
 ```
