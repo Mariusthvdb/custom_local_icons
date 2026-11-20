@@ -6,6 +6,10 @@
 
 * Reverted `requires_auth` on `/custom_local_icons/list` and `/custom_local_icons/info` back to `False`. The frontend loader (`main.js`) calls these endpoints with plain `fetch()` (no bearer token), so with auth required every dashboard load returned 401 — logged by `homeassistant.components.http.ban` as a login attempt / invalid authentication warning, and risking an IP ban. The SVG icons themselves are already served as public static paths, so the listing/info endpoints stay public, matching upstream behavior. Fixes #18.
 
+### Docs
+
+* README installation instructions no longer tell users to add the repository via "Add from link" — `Mariusthvdb/custom_local_icons` is in the default Marketplace/HACS repository list, so it only needs to be searched for and installed.
+
 ## [1.5.0] - 2026-11-19
 
 ### Added

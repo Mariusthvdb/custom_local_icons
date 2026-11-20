@@ -24,15 +24,17 @@ Use the [Gallery card](https://github.com/Mariusthvdb/Custom-local-icons-gallery
 
 ## 📦 Installation
 
-### Marketplace (Recommended, HA 2026.11+)
+### Marketplace / HACS (Recommended, HA 2026.11+)
 
-[![Open your Home Assistant instance and open a repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Mariusthvdb&repository=custom_local_icons&category=integration)
 
-or:
-1. Open **Settings → Marketplace** in your Home Assistant instance (on older versions, use HACS)
-2. Click **Add from link** and enter `https://github.com/Mariusthvdb/custom_local_icons`
-3. Search for "Custom Local Icons" and click Install
+This repository is in the **default** Marketplace / HACS repository list, so there is nothing to add:
+
+1. Open **Settings → Marketplace** in your Home Assistant instance (on older versions: **HACS → Integrations**)
+2. Search for **Custom Local Icons**
+3. Click **Install** (Marketplace) or **Download** (HACS)
 4. Restart Home Assistant
+
+> Do not add `https://github.com/Mariusthvdb/custom_local_icons` via "Add from link" / custom repositories — it is already in the default list, and adding it would only create a duplicate entry.
 
 ### Manual Installation
 1. Download the latest release
