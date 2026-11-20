@@ -26,7 +26,6 @@ Use the [Gallery card](https://github.com/Mariusthvdb/Custom-local-icons-gallery
 
 ### Marketplace / HACS (Recommended, HA 2026.11+)
 
-
 This repository is in the **default** Marketplace / HACS repository list, so there is nothing to add:
 
 1. Open **Settings → Marketplace** in your Home Assistant instance (on older versions: **HACS → Integrations**)
