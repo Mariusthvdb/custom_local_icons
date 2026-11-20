@@ -46,7 +46,7 @@ class ListingView(HomeAssistantView):
 
     url = "/custom_local_icons/list"
     name = "Custom Local Icons Listing"
-    requires_auth = True
+    requires_auth = False
 
     async def get(self, request):
         """Return icon list."""
@@ -77,7 +77,7 @@ class InfoView(HomeAssistantView):
 
     url = "/custom_local_icons/info"
     name = "Custom Local Icons Info"
-    requires_auth = True
+    requires_auth = False
 
     async def get(self, request):
         """Return integration info."""
